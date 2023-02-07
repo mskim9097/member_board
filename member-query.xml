@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<comment>member-query.xml file</comment>
+	
+	<!-- 내 정보 조회 -->
+	<entry key = "selectAll">
+		SELECT MEMBER_NO, MEMBER_ID, MEMBER_NM, MEMBER_GENDER, 
+		TO_CHAR(ENROLL_DATE, 'YYYY"년" MM"월" DD"일" HH24:MI:SS') ENROLL_DATE
+		FROM MEMBER
+	</entry>
+</properties>
