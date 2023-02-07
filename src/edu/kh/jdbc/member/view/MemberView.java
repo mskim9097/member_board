@@ -4,7 +4,7 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-import edu.kh.emp.model.vo.Employee;
+import edu.kh.jdbc.main.view.MainView;
 import edu.kh.jdbc.member.model.service.MemberService;
 import edu.kh.jdbc.member.model.vo.Member;
 
@@ -19,10 +19,10 @@ public class MemberView{
 	private Member loginMember = null;
 	
 	
-	public void memberMenu(Member loginMember) {
+	public void memberMenu(Member LoginMember) {
 		
 		// 전달 받은 로그인 회원 정보를 필드에 저장
-		this.loginMember = loginMember;
+		this.loginMember = LoginMember;
 		
 		int input = -1;
 		try {
@@ -66,18 +66,24 @@ public class MemberView{
 
 
 
-	private void selectMyInfo(Member loginMember) {
+	private void selectMyInfo(Member loginMember) throws Exception{
 		
 		System.out.println("<<내 정보 조회>>");
+		
+		String memberId = loginMember.getMemberId();
+		
+		Member member = service.selectMyInfo(memberId);
+		
 		System.out.println("------------------------------------------------------------");
 		System.out.println("회원번호| 아이디 |  이름  | 성별 |          가입일");
 		System.out.println("------------------------------------------------------------");
 		System.out.printf("   %d    | %s | %s |  %s   | %s\n",
-				loginMember.getMemberNo(), 
-				loginMember.getMemberId(),
-				loginMember.getMemberName(), 
-				loginMember.getMemberGender(),
-				loginMember.getEnrollDate());
+				
+				member.getMemberNo(), 
+				member.getMemberId(),
+				member.getMemberName(), 
+				member.getMemberGender(),
+				member.getEnrollDate());
 		
 	}
 	
@@ -103,18 +109,116 @@ public class MemberView{
 		
 	}
 	
-	private void updateMember(Member loginMember) {
-		// TODO Auto-generated method stub
+	private void updateMember(Member loginMember) throws Exception{
+		
+		System.out.println("<<내 정보 수정>>");
+		
+		int result = 0;
+		String memberId = loginMember.getMemberId();
+		
+		System.out.print("이름 입력 : ");
+		String memberName = sc.next();
+		while(true) {
+			System.out.print("성별 입력(M/F): ");
+			String memberGender = sc.next().toUpperCase();
+			
+			System.out.println();
+			if(memberGender.equals("M") || memberGender.equals("F")) {
+				System.out.print("정말 수정하시겠습니까?(Y/N)");
+				String input = sc.next().toUpperCase();
+				if(input.equals("Y")) {
+					result = service.updateMember(memberName, memberGender, memberId);
+					break;
+				} else {
+					System.out.println("취소되었습니다.");
+					return;
+				}
+				
+			} else {
+				System.out.println("[M 또는 F만 입력하세요!]");
+			}
+			System.out.println();
+			
+		}
+		
+		if(result > 0) {
+			System.out.println("회원 정보가 수정되었습니다");
+		} else {
+			System.out.println("회원 정보가 수정되지 않았습니다");
+		}
+		
 		
 	}
 	
-	private void updatePw(Member loginMember) {
-		// TODO Auto-generated method stub
+	private void updatePw(Member loginMember) throws Exception{
+		System.out.println("<<비밀번호 변경>>");
 		
+		int result = 0;
+		
+		String memberId = loginMember.getMemberId();
+	
+		// 로그인 멤버의 비밀번호 불러오기
+		String memberPw = service.findPw(memberId);
+		
+
+		while(true) {
+			System.out.print("현재 비밀번호 : ");
+			String checkPw = sc.next();
+			
+			if(!checkPw.equals(memberPw)) {
+				System.out.println("비밀번호가 일치하지 않습니다.");
+			} else {
+			
+				System.out.print("새 비밀번호 : ");
+				String memberPw1 = sc.next();
+				
+				System.out.print("새 비밀번호 확인 : ");
+				String memberPw2 = sc.next();
+				
+				if(memberPw1.equals(memberPw2)) {
+					System.out.print("정말 수정하시겠습니까?(Y/N) : ");
+					String input = sc.next().toUpperCase();
+					if(input.equals("Y")) {
+						result = service.updatePw(memberId, memberPw1);
+						break;
+						
+					} else {
+						System.out.println("취소되었습니다");
+						return;
+					}
+				} else {
+					System.out.println("새 비밀번호가 일치하지 않습니다.");
+				}
+						
+			}	
+		}if(result > 0) {
+			System.out.println("비밀번호가 수정되었습니다");
+		} else {
+			System.out.println("비밀번호가 수정되지않았습니다");
+		}
+				
 	}
 	
-	private void secession(Member loginMember) {
-		// TODO Auto-generated method stub
+	private void secession(Member loginMember) throws Exception{
+		System.out.println("<<회원 탈퇴>>");
+		
+		int result = 0;
+		String memberId = loginMember.getMemberId();
+		
+		System.out.print("정말 탈퇴하시겠습니까? (Y/N) : ");
+		String input = sc.next().toUpperCase();
+		
+		if(input.equals("Y")) {
+			result = service.secession(memberId);
+		} else {
+			System.out.println("회원 탈퇴를 취소하였습니다.");
+		}
+		if(result > 0) {
+			System.out.println("회원 탈퇴를 완료하였습니다");
+			
+		} else {
+			System.out.println("회원 탈퇴에 실패하였습니다");
+		}
 		
 	}
 
