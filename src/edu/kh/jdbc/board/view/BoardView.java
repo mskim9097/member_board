@@ -4,14 +4,17 @@ import java.util.List;
 import java.util.Scanner;
 
 import edu.kh.jdbc.board.model.service.BoardService;
+import edu.kh.jdbc.board.model.service.CommentService;
 import edu.kh.jdbc.board.model.vo.Board;
+import edu.kh.jdbc.board.model.vo.Comment;
 import edu.kh.jdbc.member.model.vo.Member;
 
 public class BoardView {
 	
 	private Scanner sc = new Scanner(System.in);
 	
-	private BoardService service = new BoardService();
+	private BoardService boardService = new BoardService();
+	private CommentService commentService = new CommentService();
 	
 	private Member loginMember = null;
 	
@@ -59,9 +62,7 @@ public class BoardView {
 		
 		System.out.println("<<게시글 목록 조회>>");
 		
-		List<Board> boardList = service.selectAllBoard();
-		
-		List<Integer> commentCountList = service.commentCount();
+		List<Board> boardList = boardService.selectAllBoard();
 		
 		if(boardList.isEmpty()) {
 			System.out.println("조회된 게시글이 없습니다");
@@ -70,9 +71,10 @@ public class BoardView {
 			System.out.println("게시글 번호 | 제목[댓글 수] | 작성자명 |        작성일       | 조회수");
 			System.out.println("---------------------------------------------------------------------");
 			for(Board board : boardList) {
-				System.out.printf("      %d     |  %s  |  %s  | %s |    %d\n",
+				System.out.printf("      %d     |  %s [%d]  |  %s  | %s |    %d\n",
 						board.getBoardNo(),
 						board.getBoardTitle(),
+						board.getCommentCount(),
 						board.getMemberName(),
 						board.getCreateDate(),
 						board.getReadCount()						
@@ -90,21 +92,71 @@ public class BoardView {
 		System.out.print("게시글 번호 : ");
 		int boardNo = sc.nextInt();
 		sc.nextLine();
-		Board board = service.selectBoard(boardNo);
+		Board board = boardService.selectBoard(boardNo);
 		
 		if(board == null) {
 			System.out.println("조회된 게시글이 없습니다.");
 		} else {
 			System.out.println("---------------------------------------------------------------------");
-			System.out.println("게시글 번호 | 제목[댓글 수] | 내용 | 작성자명 |        작성일       | 조회수");
+			System.out.println("게시글 번호 | 제목 | 내용 | 작성자명 |        작성일       | 조회수");
 			System.out.println("---------------------------------------------------------------------");
 			System.out.printf("      %d     |  %s  | %s |  %s  | %s |    %d\n",
 					board.getBoardNo(),
 					board.getBoardTitle(),
+					board.getBoardContent(),
 					board.getMemberName(),
 					board.getCreateDate(),
 					board.getReadCount()						
 					);
+			
+			List<Comment> commentList = commentService.selectAllComment(boardNo);
+			System.out.println("<<댓글 목록>>");
+			System.out.println("댓글 번호 | 댓글 내용 | 댓글 작성일 | 작성일");
+			System.out.println("---------------------------------------------------------------------");
+			for(Comment comment: commentList) {
+				System.out.printf("      %d     | %s  | %s |    %s\n",
+						comment.getCommentNo(),
+						comment.getCommentContent(),
+						comment.getCreateDate(),
+						comment.getMemberName()					
+						);
+			}
+			
+			int input = -1;
+			
+			do {
+				System.out.println("1. 댓글 작성 : ");
+				for(Comment comment : commentList) {
+					if(comment.getMemberName().equals(loginMember.getMemberName())) {
+						System.out.println("2. 댓글 수정 : ");
+						System.out.println("3. 댓글 삭제 : ");
+					}
+				}
+				
+				if(board.getMemberName().equals(loginMember.getMemberName())) {
+					System.out.println("4. 게시글 수정 : ");
+					System.out.println("5. 게시글 삭제 : ");
+				}
+				System.out.println("0. 이전 메뉴 이동 : ");
+				
+				System.out.println("\n메뉴 선택 : ");
+				
+				input = sc.nextInt();
+				sc.nextLine();
+				System.out.println();
+				
+				switch(input) {
+				
+				case 1: break;
+				case 2: break;
+				case 3: break;
+				case 4: break;
+				case 5: break;
+				case 0: break;
+				default : 
+				}
+				
+			} while(input == 0);
 		}
 	}
 	

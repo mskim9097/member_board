@@ -34,15 +34,5 @@ public class BoardService {
 		return board;
 	}
 
-	public List<Integer> commentCount() {
-		
-		Connection conn = getConnection();
-		
-		List<Integer> commentCountList = dao.commentCount(conn);
-		
-		close(conn);
-		
-		return commentCountList;
-	}
 
 }

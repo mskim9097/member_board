@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-<comment>comment-query.xml file</comment>
+	<comment>comment-query.xml file</comment>
+	
+		<!-- 댓글 목록 -->
+		<entry key = "selectComment">
+			SELECT COMMENT_NO, COMMENT_CONTENT, CREATE_DT, MEMBER_NM
+			FROM "COMMENT"
+			LEFT JOIN MEMBER USING(MEMBER_NO)
+			WHERE BOARD_NO = ?
+		</entry>
 </properties>

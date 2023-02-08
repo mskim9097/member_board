@@ -26,14 +26,7 @@ public class Board {
 	}
 
 
-	public int getCommentCount() {
-		return commentCount;
-	}
-
-
-	public void setCommentCount(int commentCount) {
-		this.commentCount = commentCount;
-	}
+	
 
 
 	public Board(int boardNo, String boardTitle, String boardContent, String memberName, String createDate,
@@ -117,7 +110,14 @@ public class Board {
 		this.deleteFlag = deleteFlag;
 	}
 	
-	
+	public int getCommentCount() {
+		return commentCount;
+	}
+
+
+	public void setCommentCount(int commentCount) {
+		this.commentCount = commentCount;
+	}
 	
 	
 	
