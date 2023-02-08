@@ -1,6 +1,5 @@
 package edu.kh.jdbc.member.view;
 
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -17,6 +16,7 @@ public class MemberView{
 	
 	// 로그인 회원 정보 저장용 변수
 	private Member loginMember = null;
+	
 	
 	
 	public void memberMenu(Member LoginMember) {
@@ -215,6 +215,8 @@ public class MemberView{
 		}
 		if(result > 0) {
 			System.out.println("회원 탈퇴를 완료하였습니다");
+			loginMember = null;
+			
 			
 		} else {
 			System.out.println("회원 탈퇴에 실패하였습니다");

@@ -79,7 +79,7 @@ public class MainView {
 					switch(input) {
 					
 					case 1: memberView.memberMenu(LoginMember); break; // 회원기능 서브 메뉴 출력
-					case 2: boardView.boardMenu(); break; // 게시판기능 서브 메뉴 출력
+					case 2: boardView.boardMenu(LoginMember); break; // 게시판기능 서브 메뉴 출력
 					case 0: 
 						LoginMember = null; // 로그아웃 == loginMember가 참조하는 객체 없음(== null)
 						System.out.println("\n[로그아웃 되었습니다]\n");
