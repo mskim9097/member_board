@@ -218,6 +218,8 @@ public class MemberView{
 			loginMember = null;
 			
 			
+			
+			
 		} else {
 			System.out.println("회원 탈퇴에 실패하였습니다");
 		}
