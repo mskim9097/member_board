@@ -15,6 +15,7 @@ import static edu.kh.jdbc.common.JDBCTemplate.*;
 
 public class MemberDAO {
 	
+	//필드
 	private Statement stmt = null;
 	private PreparedStatement pstmt = null;
 	private ResultSet rs = null;
@@ -32,6 +33,7 @@ public class MemberDAO {
 			e.printStackTrace();
 		}
 	}
+	
 	
 	public Member selectMyInfo(Connection conn, String memberId) throws Exception{
 		
@@ -59,6 +61,7 @@ public class MemberDAO {
 		
 		return member;
 	}
+	
 
 	/** 회원 정보 조회 DAO
 	 * @param conn
@@ -67,18 +70,23 @@ public class MemberDAO {
 	 */
 	public List<Member> selectAll(Connection conn) throws Exception{
 		
-		
+		// 결과 저장용 변수 선언
 		List<Member> memberList = new ArrayList<>();
 		
 		try {
-						
+			// SQL 얻어오기			
 			String sql = prop.getProperty("selectAll");
 			
+			// Statement 객체 생성
 			stmt = conn.createStatement();
 			
+			// SQL(SELECT) 수행 후 결과(ResultSet) 반환받기
 			rs = stmt.executeQuery(sql);
 			
+			// 반복문(while)을 이용해서 조회 결과의 각 행에 접근
 			while(rs.next()) {
+				// 컬럼 값을 얻어와 Member 객체 저장 후 List에 추가
+				
 				String memberId = rs.getString("MEMBER_ID");
 				String memberName = rs.getString("MEMBER_NM");
 				String memberGender = rs.getString("MEMBER_GENDER");
@@ -88,16 +96,25 @@ public class MemberDAO {
 				memberList.add(member);
 				
 			}
-			
-			
+						
 		} finally {
+			// JDBC 객체자원 반환
 			close(rs);
 			close(stmt);
 		}
 		
+		// 조회 결과를 옮겨담은 List 반환
 		return memberList;
 	}
 
+	/**
+	 * @param conn
+	 * @param memberName
+	 * @param memberGender
+	 * @param memberId
+	 * @return result
+	 * @throws Exception
+	 */
 	public int updateMember(Connection conn, String memberName, String memberGender, String memberId) throws Exception{
 		
 		int result = 0;

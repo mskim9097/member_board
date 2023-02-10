@@ -1,5 +1,7 @@
 package edu.kh.jdbc.board.model.vo;
 
+import java.util.List;
+
 public class Board {
 	
 	private int boardNo; // 게시글 번호
@@ -11,7 +13,19 @@ public class Board {
 	private int readCount; // 게시글 조회수
 	private String deleteFlag; // 게시글 삭제여부
 	
+	private List<Comment> commentList; //댓글 목록
 	
+	
+	public List<Comment> getCommentList() {
+		return commentList;
+	}
+
+
+	public void setCommentList(List<Comment> commentList) {
+		this.commentList = commentList;
+	}
+
+
 	public Board() {}
 
 

@@ -12,6 +12,8 @@ import static edu.kh.jdbc.common.JDBCTemplate.*;
 public class MemberService {
 	private MemberDAO dao = new MemberDAO();
 	
+	
+	
 	public Member selectMyInfo(String memberId) throws Exception{
 		
 		Connection conn = getConnection();
@@ -20,17 +22,19 @@ public class MemberService {
 		return member;
 	}
 
-	/** 회원 목록 조회
+	/** 회원 목록 조회 서비스
 	 * @return memberList
 	 * @throws Exception
 	 */
 	public List<Member> selectAll() throws Exception{
 		
-		Connection conn = getConnection();
+		Connection conn = getConnection(); // 커넥션 생성
+		
+		// DAO 메서드 호출 후 결과 반환 받기
 		
 		List<Member> memberList = dao.selectAll(conn);
 		
-		close(conn);
+		close(conn); // 커넥션 반환
 		
 		return memberList;
 	}

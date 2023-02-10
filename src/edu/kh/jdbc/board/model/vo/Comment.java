@@ -2,12 +2,12 @@ package edu.kh.jdbc.board.model.vo;
 
 public class Comment {
 	
-	private int commentNo;
-	private String commentContent;
-	private String createDate;
+	private int commentNo; // 댓글 번호
+	private String commentContent; // 댓글 내용
+	private String createDate; // 댓글 작성일
 	private String deleteFlag;
-	private int boardNo;
-	private String memberName;
+	private int boardNo;  // 작성된 게시글 번호
+	private String memberName; // 작성자 이름
 	
 	
 	public Comment() {

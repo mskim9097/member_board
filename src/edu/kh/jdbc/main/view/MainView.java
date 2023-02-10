@@ -17,7 +17,7 @@ public class MainView {
 
 	
 	// 로그인된 회원 정보를 저장한 객체를 참조하는 참조 변수
-	private static Member LoginMember = null;
+	public static Member LoginMember = null;
 	// -> 로그인 X == null
 	// -> 로그인 O != null
 	
@@ -32,8 +32,7 @@ public class MainView {
 	 */
 	public void mainMenu() {
 		
-		
-		
+				
 		int input = -1;
 		
 		do {

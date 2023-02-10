@@ -100,4 +100,11 @@ public class BoardDAO {
 		return board;
 	}
 
+
+
+	public int nextBoardNo(Connection conn) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

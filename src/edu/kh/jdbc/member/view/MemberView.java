@@ -3,7 +3,7 @@ package edu.kh.jdbc.member.view;
 import java.util.List;
 import java.util.Scanner;
 
-import edu.kh.jdbc.main.view.MainView;
+import static edu.kh.jdbc.main.view.MainView.*;
 import edu.kh.jdbc.member.model.service.MemberService;
 import edu.kh.jdbc.member.model.vo.Member;
 
@@ -14,18 +14,20 @@ public class MemberView{
 	
 	private MemberService service = new MemberService();
 	
+	
 	// 로그인 회원 정보 저장용 변수
 	private Member loginMember = null;
 	
 	
+	int input = -1;
 	
 	public void memberMenu(Member LoginMember) {
 		
 		// 전달 받은 로그인 회원 정보를 필드에 저장
-		this.loginMember = LoginMember;
-		
-		int input = -1;
+				
 		try {
+			
+			this.loginMember = LoginMember;
 			
 			do {
 				System.out.println("***** 회원 기능*****");
@@ -45,13 +47,15 @@ public class MemberView{
 				switch(input) {
 				
 				case 1: selectMyInfo(loginMember); break; // 내 정보 조회
-				case 2: selectAll(loginMember); break; // 회원 목록 조회
+				case 2: selectAll(); break; // 회원 목록 조회
 				case 3: updateMember(loginMember); break; //내정보 수정
 				case 4: updatePw(loginMember); break; // 비밀번호 변경
-				case 5: secession(loginMember); break; // 회원 탈퇴
+				case 5: secession();  // 회원 탈퇴
 				case 0:
-					System.out.println("이전 메뉴 이동");
-					return;
+						System.out.println("이전 메뉴 이동");
+						return;
+					
+					
 				default : System.out.println("메뉴에 작성된 번호만 입력해주세용");
 				}
 				
@@ -73,7 +77,7 @@ public class MemberView{
 		String memberId = loginMember.getMemberId();
 		
 		Member member = service.selectMyInfo(memberId);
-		
+				
 		System.out.println("------------------------------------------------------------");
 		System.out.println("회원번호| 아이디 |  이름  | 성별 |          가입일");
 		System.out.println("------------------------------------------------------------");
@@ -87,12 +91,14 @@ public class MemberView{
 		
 	}
 	
-	private void selectAll(Member loginMember) throws Exception{
+	private void selectAll() throws Exception{
 		
 		System.out.println("<<회원 목록 조회>>");
 		
+		// 회원 목록 조회 서비스 호출 후 결과 반환 받기
 		List<Member> memberList = service.selectAll();
 		
+		// 조회 결과가 있으면 모두출력 없으면 조회결과없다 출력
 		if(memberList.isEmpty()) {
 			System.out.println("조회된 사원 정보가 없습니다.");
 		} else {
@@ -167,6 +173,7 @@ public class MemberView{
 			
 			if(!checkPw.equals(memberPw)) {
 				System.out.println("비밀번호가 일치하지 않습니다.");
+				return;
 			} else {
 			
 				System.out.print("새 비밀번호 : ");
@@ -199,23 +206,27 @@ public class MemberView{
 				
 	}
 	
-	private void secession(Member loginMember) throws Exception{
+	private void secession() throws Exception{
 		System.out.println("<<회원 탈퇴>>");
 		
 		int result = 0;
 		String memberId = loginMember.getMemberId();
 		
 		System.out.print("정말 탈퇴하시겠습니까? (Y/N) : ");
-		String input = sc.next().toUpperCase();
+		String ch = sc.next().toUpperCase();
 		
-		if(input.equals("Y")) {
+		if(ch.equals("Y")) {
 			result = service.secession(memberId);
 		} else {
 			System.out.println("회원 탈퇴를 취소하였습니다.");
 		}
 		if(result > 0) {
 			System.out.println("회원 탈퇴를 완료하였습니다");
-			loginMember = null;
+			
+			// 로그아웃 // 메인메뉴로 이동
+			LoginMember = null;
+			input = 0;
+			return;
 			
 			
 			

@@ -9,6 +9,8 @@ import edu.kh.jdbc.board.model.vo.Board;
 import edu.kh.jdbc.board.model.vo.Comment;
 import edu.kh.jdbc.member.model.vo.Member;
 
+import static edu.kh.jdbc.main.view.MainView.*;
+
 public class BoardView {
 	
 	private Scanner sc = new Scanner(System.in);
@@ -19,9 +21,9 @@ public class BoardView {
 	private Member loginMember = null;
 	
 	
-	public void boardMenu(Member loginMember) {
+	public void boardMenu(Member LoginMember) {
 		
-		this.loginMember = loginMember;
+		this.loginMember = LoginMember;
 		
 		int input = -1;
 		try {
@@ -42,7 +44,7 @@ public class BoardView {
 				
 				switch(input) {
 				
-				case 1: selectAllBoard(loginMember); break;
+				case 1: selectAllBoard(); break;
 				case 2: selectBoard(loginMember); break;
 				case 3: insertBoard(loginMember); break;
 				case 4: searchBoard(loginMember); break;
@@ -58,7 +60,7 @@ public class BoardView {
 		}
 	}
 	
-	private void selectAllBoard(Member loginMember) throws Exception{
+	private void selectAllBoard() throws Exception{
 		
 		System.out.println("<<게시글 목록 조회>>");
 		
@@ -161,8 +163,48 @@ public class BoardView {
 	}
 	
 	private void insertBoard(Member loginMember) {
-		// TODO Auto-generated method stub
 		
+		System.out.println("<<게시글 등록>>");
+		
+		System.out.print("제목 : ");
+		String boardTitle = sc.nextLine();
+		
+		System.out.print("내용 : ");
+		String boardContent = inputContent();
+		
+		
+		// Board 객체에 제목, 내용, 회원 번호를 담아서 서비스에 전달
+		Board board = new Board();
+		
+		board.setBoardTitle(boardTitle);
+		board.setBoardContent(boardContent);
+		board.setMemberName(LoginMember.getMemberName());
+		
+		int result = boardService.insertBoard(board);
+		
+	}
+	
+	/** 내용 입력
+	 * @return content
+	 */
+	private String inputContent() {
+		String content = ""; // 빈 문자열
+		String input = null; // 참조하는 객체가 없음
+		
+		System.out.println("입력 종료시 ($exit) 입력");
+		
+		while(true) {
+			input =sc.nextLine();
+			
+			if(input.equals("$exit")) {
+				break;
+			}
+			
+			// 입력된 내용을 content에 누적
+			content += input + "\n";
+		}
+		
+		return content;
 	}
 
 
