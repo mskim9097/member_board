@@ -2,57 +2,21 @@ package edu.kh.jdbc.board.model.vo;
 
 import java.util.List;
 
+// 게시글 1개 정보를 저장하는 VO
 public class Board {
+	private int boardNo;			// 게시글 번호
+	private String boardTitle;	 	// 게시글 제목
+	private String boardContent;	// 게시글 내용
+	private String createDate;		// 작성일
+	private int readCount;			// 조회 수
+	private int memberNo;			// 작성자 회원 번호
+	private String memberName;		// 작성자 회원 이름
+	private int commentCount;		// 댓글 수
 	
-	private int boardNo; // 게시글 번호
-	private String boardTitle; // 게시글 제목
-	private int commentCount; // 댓글 수
-	private String boardContent; // 게시글 내용
-	private String memberName; // 작성자명
-	private String createDate; // 게시글 작성일
-	private int readCount; // 게시글 조회수
-	private String deleteFlag; // 게시글 삭제여부
-	
-	private List<Comment> commentList; //댓글 목록
+	private List<Comment> commentList; // 댓글 목록
 	
 	
-	public List<Comment> getCommentList() {
-		return commentList;
-	}
-
-
-	public void setCommentList(List<Comment> commentList) {
-		this.commentList = commentList;
-	}
-
-
 	public Board() {}
-
-
-	public Board(int boardNo, String boardTitle, int commentCount, String memberName, String createDate, int readCount) {
-		super();
-		this.boardNo = boardNo;
-		this.boardTitle = boardTitle;
-		this.commentCount = commentCount;
-		this.memberName = memberName;
-		this.createDate = createDate;
-		this.readCount = readCount;
-	}
-
-
-	
-
-
-	public Board(int boardNo, String boardTitle, String boardContent, String memberName, String createDate,
-			int readCount) {
-		super();
-		this.boardNo = boardNo;
-		this.boardTitle = boardTitle;
-		this.boardContent = boardContent;
-		this.memberName = memberName;
-		this.createDate = createDate;
-		this.readCount = readCount;
-	}
 
 
 	public int getBoardNo() {
@@ -85,16 +49,6 @@ public class Board {
 	}
 
 
-	public String getMemberName() {
-		return memberName;
-	}
-
-
-	public void setMemberName(String memberName) {
-		this.memberName = memberName;
-	}
-
-
 	public String getCreateDate() {
 		return createDate;
 	}
@@ -115,15 +69,26 @@ public class Board {
 	}
 
 
-	public String getDeleteFlag() {
-		return deleteFlag;
+	public int getMemberNo() {
+		return memberNo;
 	}
 
 
-	public void setDeleteFlag(String deleteFlag) {
-		this.deleteFlag = deleteFlag;
+	public void setMemberNo(int memberNo) {
+		this.memberNo = memberNo;
 	}
-	
+
+
+	public String getMemberName() {
+		return memberName;
+	}
+
+
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
+	}
+
+
 	public int getCommentCount() {
 		return commentCount;
 	}
@@ -132,6 +97,23 @@ public class Board {
 	public void setCommentCount(int commentCount) {
 		this.commentCount = commentCount;
 	}
+
+
+	public List<Comment> getCommentList() {
+		return commentList;
+	}
+
+
+	public void setCommentList(List<Comment> commentList) {
+		this.commentList = commentList;
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

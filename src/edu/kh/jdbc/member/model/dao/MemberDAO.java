@@ -1,5 +1,7 @@
 package edu.kh.jdbc.member.model.dao;
 
+import static edu.kh.jdbc.common.JDBCTemplate.*;
+
 import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,197 +11,182 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import edu.kh.jdbc.member.model.vo.Member;
-
-import static edu.kh.jdbc.common.JDBCTemplate.*;
+import edu.kh.jdbc.member.vo.Member;
 
 public class MemberDAO {
 	
-	//필드
-	private Statement stmt = null;
-	private PreparedStatement pstmt = null;
-	private ResultSet rs = null;
+	// 필드(== 멤버 변수)
+	private Statement stmt;
+	private PreparedStatement pstmt;
+	private ResultSet rs;
+	private Properties prop;
 	
-	private Properties prop = null;
-	
-	// 기본생성
-	public MemberDAO() {
-		
+	public MemberDAO() { // 기본 생성자
 		try {
 			prop = new Properties();
-			
 			prop.loadFromXML(new FileInputStream("member-query.xml"));
-		} catch(Exception e) {
+		}catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	public Member selectMyInfo(Connection conn, String memberId) throws Exception{
-		
-		Member member = null;
-		
-		try {
-			String sql = prop.getProperty("selectMyInfo");
-			
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, memberId);
-			
-			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
-				member = new Member(rs.getInt("MEMBER_NO"),
-						memberId,
-						rs.getString("MEMBER_NM"),
-						rs.getString("MEMBER_GENDER"),
-						rs.getString("ENROLL_DATE"));
-			}
-		} finally {
-			close(rs);
-			close(pstmt);
-		}
-		
-		return member;
-	}
-	
 
-	/** 회원 정보 조회 DAO
+	
+	/** 회원 목록 조회 DAO
 	 * @param conn
 	 * @return memberList
 	 * @throws Exception
 	 */
 	public List<Member> selectAll(Connection conn) throws Exception{
-		
 		// 결과 저장용 변수 선언
 		List<Member> memberList = new ArrayList<>();
 		
 		try {
-			// SQL 얻어오기			
+			// SQL 얻어오기
 			String sql = prop.getProperty("selectAll");
 			
 			// Statement 객체 생성
 			stmt = conn.createStatement();
 			
-			// SQL(SELECT) 수행 후 결과(ResultSet) 반환받기
+			// SQL(SELECT) 수행 후 결과(ResultSet) 반환 받기
 			rs = stmt.executeQuery(sql);
 			
-			// 반복문(while)을 이용해서 조회 결과의 각 행에 접근
+			// 반복문(while)을 이용해서 조회 결과의 각 행에 접근 후
 			while(rs.next()) {
-				// 컬럼 값을 얻어와 Member 객체 저장 후 List에 추가
-				
+				// 컬럼 값을 얻어와 Member 객체에 저장 후 List에 추가
 				String memberId = rs.getString("MEMBER_ID");
 				String memberName = rs.getString("MEMBER_NM");
 				String memberGender = rs.getString("MEMBER_GENDER");
 				
-				Member member = new Member(memberId, memberName, memberGender);
+				Member member = new Member();
+				member.setMemberId(memberId);
+				member.setMemberName(memberName);
+				member.setMemberGender(memberGender);
 				
 				memberList.add(member);
-				
 			}
-						
-		} finally {
-			// JDBC 객체자원 반환
+			
+		}finally {
+			// JDBC 객체 자원 반환
 			close(rs);
 			close(stmt);
 		}
-		
-		// 조회 결과를 옮겨담은 List 반환
+
+		// 조회 결과를 옮겨 담은 List 반환
 		return memberList;
 	}
 
-	/**
+
+	/** 회원 정보 수정 DAO
 	 * @param conn
-	 * @param memberName
-	 * @param memberGender
-	 * @param memberId
+	 * @param member
 	 * @return result
 	 * @throws Exception
 	 */
-	public int updateMember(Connection conn, String memberName, String memberGender, String memberId) throws Exception{
+	public int updateMember(Connection conn, Member member) throws Exception{
 		
-		int result = 0;
+		// 결과 저장용 변수 생성
+		int result = 0; // UPDATE 반영 결과 행의 개수(정수형)를 저장하기 위한 변수
 		
 		try {
+			// SQL 얻어오기
 			String sql = prop.getProperty("updateMember");
-			
+		
+			// PreparedStatement 객체 생성
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setString(1, memberName);
-			pstmt.setString(2, memberGender);
-			pstmt.setString(3, memberId);
+			// ? 알맞은 값 대입
+			pstmt.setString(1, member.getMemberName());
+			pstmt.setString(2, member.getMemberGender());
+			pstmt.setInt(3, member.getMemberNo());
 			
+			// SQL 수행 후 결과 반환 받기
 			result = pstmt.executeUpdate();
 			
-		} finally {
+		}finally {
+			// JDBC 객체 자원 반환
 			close(pstmt);
 		}
 		
+		// 수정 결과 반환
 		return result;
 	}
-	
-	public String findPw(Connection conn, String memberId) throws Exception {
-		
-		String memberPw = null;
-		
-		try {
-			String sql = prop.getProperty("findPw");
-			
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, memberId);
-			
-			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
-				memberPw = rs.getString("MEMBER_PW");
-			}
-			
-		} finally {
-			
-		}
-		
-		return memberPw;
-		
-	}
 
-	public int updatePw(Connection conn, String memberId, String memberPw1) throws Exception{
-		
-		int result = 0;
+
+	/** 비밀번호 변경 DAO
+	 * @param conn
+	 * @param currentPw
+	 * @param newPw1
+	 * @param memberNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updatePw(Connection conn, String currentPw, String newPw1, int memberNo) throws Exception {
+		// 결과 저장용 변수 생성
+		int result = 0; // UPDATE 반영 결과 행의 개수(정수형)를 저장하기 위한 변수
 		
 		try {
+			// SQL 얻어오기
 			String sql = prop.getProperty("updatePw");
-			
+		
+			// PreparedStatement 객체 생성
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setString(1, memberPw1);
-			pstmt.setString(2, memberId);
+			// ? 알맞은 값 대입
+			pstmt.setString(1, newPw1);
+			pstmt.setInt(2, memberNo);
+			pstmt.setString(3, currentPw);
 			
+			// SQL 수행 후 결과 반환 받기
 			result = pstmt.executeUpdate();
 			
-		} finally {
+		}finally {
+			// JDBC 객체 자원 반환
 			close(pstmt);
 		}
-		return result;
+		
+		// 수정 결과 반환
+		return result;		
+	
 	}
 
-	public int secession(Connection conn, String memberId) throws Exception{
+
+	/** 회원 탈퇴 DAO
+	 * @param conn
+	 * @param memberPw
+	 * @param memberNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public int secession(Connection conn, String memberPw, int memberNo) throws Exception{
+		
 		int result = 0;
 		
 		try {
 			String sql = prop.getProperty("secession");
 			
 			pstmt = conn.prepareStatement(sql);
-			
-			pstmt.setString(1, memberId);
+			pstmt.setInt(1, memberNo);
+			pstmt.setString(2, memberPw);
 			
 			result = pstmt.executeUpdate();
 			
-		} finally {
+		}finally {
 			close(pstmt);
 		}
 		
 		return result;
 	}
-
 	
-
+	
+	
+	
+	
+	
 }
+
+
+
+
+
+
+
