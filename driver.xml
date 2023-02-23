@@ -12,7 +12,7 @@
 	
 	<entry key="url">jdbc:oracle:thin:@localhost:1521:xe</entry>
 	
-	<entry key="user">member_bdh</entry>
+	<entry key="user">member_ms</entry>
 	
 	<entry key="password">member1234</entry>
 	
